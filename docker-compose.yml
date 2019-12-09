@@ -4,7 +4,7 @@ services:
   webserver:
     build: 
       context: ./bin/webserver
-    container_name: '${PROJECT_NAME:?nom de porjet manquant}-5.6.x-webserver'
+    container_name: '${PROJECT_NAME:?nom de porjet manquant}-webserver'
     restart: unless-stopped
     labels:
       traefik.frontend.rule: "Host:${APP_HOSTS}"
@@ -18,12 +18,12 @@ services:
       - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
       - ${LOG_DIR-./logs/apache2}:/var/log/apache2
     networks:
-      - csm_net
+      - default_net
       - traefik_default
 
   mysql:
     image: mysql:5.6
-    container_name: '${PROJECT_NAME:?nom de porjet manquant}-5.6-mysql'
+    container_name: '${PROJECT_NAME:?nom de porjet manquant}-mysql'
     restart: unless-stopped
     labels:
       traefik.enable: "false"
@@ -36,7 +36,7 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     networks:
-      - csm_net
+      - default_net
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -49,11 +49,11 @@ services:
       traefik.port: 80
     restart: unless-stopped
     networks:
-      - csm_net
+      - default_net
       - traefik_default
 
 networks:
-  csm_net:
+  default_net:
   traefik_default:
     external: true
 
